@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">MaiNotes</string>
+    <string name="nav_btn_home">主页</string>
+    <string name="nav_btn_story">故事</string>
+    <string name="nav_btn_settings">设置</string>
+    <string name="nav_btn_about">关于MaiNotes</string>
+
+    <string name="desc_card_open">展开卡片</string>
+    <string name="desc_card_close">关闭卡片</string>
+    <string name="CardModuleMai_PlayerIconDesc">玩家头像</string>
+    <string name="CardModuleMai_Rating">DX Rating:</string>
+    <string name="CardModuleMai_FriendCode">好友码:</string>
+    <string name="CardModuleMai_LastSyncTime">上次同步:</string>
+    <string name="CardModuleMai_GetInfoFiled">获取失败!</string>
+    <string name="CardModuleMai_NotBindLxnsFc">暂未绑定</string>
+
+    <string name="UnknownError">发生未知错误</string>
+</resources>
