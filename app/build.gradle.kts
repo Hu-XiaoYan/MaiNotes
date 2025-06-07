@@ -1,5 +1,3 @@
-import org.gradle.internal.declarativedsl.schemaBuilder.kotlinFunctionAsConfigureLambda
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -64,5 +62,6 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
-
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.security.crypto)
 }

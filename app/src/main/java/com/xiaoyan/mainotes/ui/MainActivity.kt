@@ -1,26 +1,16 @@
-package com.xiaoyan.mainotes
+package com.xiaoyan.mainotes.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.graphics.Paint.Style
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,17 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,7 +40,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.xiaoyan.mainotes.ui.theme.MaiNotesTheme
 import kotlinx.coroutines.launch
 import androidx.navigation.compose.rememberNavController
-import kotlin.math.exp
+import com.xiaoyan.mainotes.R
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,7 +137,7 @@ fun MaiNoteMain() {
                 //承载DrawerItem
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    "MaiNotes Preview Ver-0.1.1",
+                    "MaiNotes Preview Ver-0.1.2",
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -207,14 +190,6 @@ fun MaiNoteMain() {
                             Icon(
                                 painterResource(R.drawable.appbar_ic_menu),
                                 contentDescription = "打开导航抽屉"
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { /*TODO:About Account*/ }) {
-                            Icon(
-                                painterResource(R.drawable.appbar_ic_account),
-                                contentDescription = "账号管理"
                             )
                         }
                     })

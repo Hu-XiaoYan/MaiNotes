@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xiaoyan.mainotes.network.fetchLxnsPersonalData
 import com.xiaoyan.mainotes.dataclass.LxnsPlayerDataMai
+import com.xiaoyan.mainotes.network.fetchLxnsPersonalData
 import kotlinx.coroutines.launch
 
 class SettingsViewModel: ViewModel() {
@@ -14,6 +14,10 @@ class SettingsViewModel: ViewModel() {
     var errorMessage by mutableStateOf<String?>(null)
 
     fun fetchLxnsPlayerData(lxnsPersonalToken: String) {
+        if (lxnsPersonalToken.isBlank()) {
+            errorMessage = "TokenEmpty"
+            return
+        }
         viewModelScope.launch {
             try {
                 val result = fetchLxnsPersonalData(lxnsPersonalToken)
