@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.xiaoyan.mainotes.R
 import com.xiaoyan.mainotes.viewmodel.SettingsViewModel
+import com.xiaoyan.mainotes.MaiNotes.Companion.application
 
 @Composable
 fun SettingsScreen() {
@@ -33,6 +35,14 @@ fun SettingsScreen() {
     val viewModel: SettingsViewModel = viewModel()
     val errorMessage = viewModel.errorMessage
     val playerData = viewModel.playerData
+    val config = application.configManager.config
+
+    LaunchedEffect(Unit) {
+        val savedToken = config.lxnsPersonalToken
+        application.configManager.read()
+        lxnsPersonalToken = savedToken
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()

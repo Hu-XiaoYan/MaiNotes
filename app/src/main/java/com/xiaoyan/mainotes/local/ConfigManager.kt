@@ -2,7 +2,7 @@ package com.xiaoyan.mainotes.local
 
 import android.content.Context
 import java.io.File
-import com.xiaoyan.mainotes.dataclass.UserConfig
+import com.xiaoyan.mainotes.model.UserConfig
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -15,7 +15,7 @@ val JSON = Json {
 
 open class ConfigManager (context: Context) {
     private var configFile: File = File(context.filesDir, "config.json")
-    private var config: UserConfig = UserConfig()
+    var config: UserConfig = UserConfig()
 
     init {
         if (!configFile.exists()) {
@@ -27,7 +27,7 @@ open class ConfigManager (context: Context) {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun read() {
+    fun read() {
         val configInputStream = configFile.inputStream()
         config = JSON.decodeFromStream(configInputStream)
         configInputStream.close()

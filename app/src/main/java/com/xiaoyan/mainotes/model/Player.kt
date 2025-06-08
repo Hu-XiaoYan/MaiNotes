@@ -1,4 +1,4 @@
-package com.xiaoyan.mainotes.dataclass
+package com.xiaoyan.mainotes.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

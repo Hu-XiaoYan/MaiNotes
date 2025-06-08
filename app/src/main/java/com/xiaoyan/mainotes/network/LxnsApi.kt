@@ -1,6 +1,6 @@
 package com.xiaoyan.mainotes.network
 
-import com.xiaoyan.mainotes.dataclass.LxnsPersonalApiRespMai
+import com.xiaoyan.mainotes.model.LxnsPersonalApiRespMai
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
