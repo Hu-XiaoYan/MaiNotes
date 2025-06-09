@@ -14,6 +14,8 @@
     <string name="CardModuleMai_GetInfoFiled">获取失败!</string>
     <string name="CardModuleMai_NotBindLxnsFc">暂未绑定</string>
 
+    <string name="InputLxnsPersonalToken">落雪查分器个人Token</string>
+
     <string name="UnknownError">发生未知错误</string>
     <string name="TokenEmpty">Token不能为空</string>
     <string name="TokenError">Token有误</string>

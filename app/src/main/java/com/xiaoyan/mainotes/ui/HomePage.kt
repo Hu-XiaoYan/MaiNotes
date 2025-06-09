@@ -21,17 +21,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,34 +47,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.xiaoyan.mainotes.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
-    Column(
+    var isRefreshing by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val onRefresh = {
+        isRefreshing = true
+        coroutineScope.launch {
+            delay(5000)
+            isRefreshing = false
+        }
+        Unit
+    }
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         modifier = Modifier.fillMaxSize()
     ) {
-        HomeAccountCard_Test(
-            gameName = "舞萌DX", playerId = "XiaoYan#0125",
-            description = "「陰険」で 「強欲」で 「滑稽」で 「外道」", rating = "14816",
-            playerNumId = "123456789", lastSyncDate = "2025/4/8 01:17:01"
-        )
-        HomeAccountCard_Test(
-            gameName = "中二节奏", playerId = "YaoHuo#0125",
-            description = "THE ACHIEVER／RATING 13.00", rating = "13.06",
-            playerNumId = "123456789", lastSyncDate = "2025/4/8 01:17:01"
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            HomeAccCard()
+            HomeAccCard()
+        }
     }
 }
 
 @Composable
-fun HomeAccountCard_Test(
+fun HomeAccCard(
     gameName: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
     playerId: String = stringResource(R.string.CardModuleMai_NotBindLxnsFc),
     playerIconRes: Int = R.drawable.card_ic_icon_dummy,
     description: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
     rating: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
     playerNumId: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
-    lastSyncDate: String = stringResource(R.string.CardModuleMai_GetInfoFiled)
+    lastSyncDate: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateAngle by animateFloatAsState(
@@ -79,6 +97,7 @@ fun HomeAccountCard_Test(
             stiffness = Spring.StiffnessMediumLow
         )
     )
+
     OutlinedCard(
         modifier = Modifier
             .padding(8.dp)
@@ -91,6 +110,7 @@ fun HomeAccountCard_Test(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
+                //自适应玩家信息
             ) {
                 Column {
                     Text(gameName, style = MaterialTheme.typography.titleLarge)
@@ -109,6 +129,7 @@ fun HomeAccountCard_Test(
             }
         }
         AnimatedVisibility(
+            //卡片展开动画
             visible = expanded,
             enter = expandVertically(
                 animationSpec = spring(
@@ -123,7 +144,7 @@ fun HomeAccountCard_Test(
             )
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                HomeAccCardMai(playerIconRes,description,rating,playerNumId,lastSyncDate)
+                HomeAccCardModuleMaiChu(playerIconRes,description,rating,playerNumId,lastSyncDate)
                 Spacer(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
             }
         }
@@ -131,12 +152,12 @@ fun HomeAccountCard_Test(
 }
 
 @Composable
-fun HomeAccCardMai(
+fun HomeAccCardModuleMaiChu(
     playerIconRes: Int,
     description: String,
     rating: String,
     playerNumId: String,
-    lastSyncDate: String
+    lastSyncDate: String,
 ) {
     Column(
         modifier = Modifier

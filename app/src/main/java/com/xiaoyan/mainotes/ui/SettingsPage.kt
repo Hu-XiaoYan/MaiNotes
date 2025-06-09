@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -18,30 +20,36 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.xiaoyan.mainotes.R
+import com.xiaoyan.mainotes.viewmodel.GlobalConfig
 import com.xiaoyan.mainotes.viewmodel.SettingsViewModel
-import com.xiaoyan.mainotes.MaiNotes.Companion.application
 
 @Composable
 fun SettingsScreen() {
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     var lxnsPersonalToken by remember { mutableStateOf("") }
     val viewModel: SettingsViewModel = viewModel()
     val errorMessage = viewModel.errorMessage
-    val playerData = viewModel.playerData
-    val config = application.configManager.config
 
-    LaunchedEffect(Unit) {
-        val savedToken = config.lxnsPersonalToken
-        application.configManager.read()
-        lxnsPersonalToken = savedToken
+    val isInPreview = LocalInspectionMode.current
+    if (!isInPreview) {
+        LaunchedEffect(Unit) {
+            val config = GlobalConfig.read()
+            lxnsPersonalToken = config.lxnsPersonalToken
+        }
     }
+    //Page启动前动作
 
     Box(
         modifier = Modifier
@@ -57,7 +65,7 @@ fun SettingsScreen() {
         OutlinedTextField(
             value = lxnsPersonalToken,
             onValueChange = { lxnsPersonalToken = it },
-            label = { Text("落雪查分器个人Token") },
+            label = { Text(stringResource(R.string.InputLxnsPersonalToken)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
@@ -67,6 +75,15 @@ fun SettingsScreen() {
                     isFocused = focusState.isFocused
                 },
             isError = errorMessage != null,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                }
+            ),
             supportingText = {
                 if (errorMessage != null) {
                     when (errorMessage) {
@@ -86,7 +103,7 @@ fun SettingsScreen() {
 
                         else -> {
                             Text(
-                                text = errorMessage,
+                                text = "${stringResource(R.string.UnknownError)}:${errorMessage}",
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
@@ -94,14 +111,6 @@ fun SettingsScreen() {
                 }
             }
         )
-        if (playerData != null) {
-            Text(
-                text = "你好，${playerData.name}！当前Rating：${playerData.rating}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
-        //test
     }
 }
 
