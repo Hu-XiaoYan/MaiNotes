@@ -137,7 +137,7 @@ fun MaiNoteMain() {
                 //承载DrawerItem
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    "MaiNotes Preview Ver-0.1.4",
+                    "MaiNotes Preview Ver-0.1.5",
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.titleMedium
                 )

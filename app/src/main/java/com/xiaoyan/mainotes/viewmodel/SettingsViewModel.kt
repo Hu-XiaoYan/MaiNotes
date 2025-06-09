@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xiaoyan.mainotes.model.LxnsPlayerDataMai
-import com.xiaoyan.mainotes.network.fetchLxnsPersonalData
+import com.xiaoyan.mainotes.network.fetchLxnsPersonalMaiData
 import kotlinx.coroutines.launch
 
 class SettingsViewModel: ViewModel() {
-    var playerData by mutableStateOf<LxnsPlayerDataMai?>(null)
+    private var playerData by mutableStateOf<LxnsPlayerDataMai?>(null)
     var errorMessage by mutableStateOf<String?>(null)
 
     fun fetchLxnsPlayerData(lxnsPersonalToken: String) {
@@ -21,7 +21,7 @@ class SettingsViewModel: ViewModel() {
         //Token为空拒绝抓取
         viewModelScope.launch {
             try {
-                val result = fetchLxnsPersonalData(lxnsPersonalToken)
+                val result = fetchLxnsPersonalMaiData(lxnsPersonalToken)
                 if (result.success && result.data != null){
                     playerData = result.data
                     errorMessage = null

@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -27,12 +28,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,11 +43,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.xiaoyan.mainotes.R
+import com.xiaoyan.mainotes.viewmodel.GlobalConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -63,6 +66,20 @@ fun HomeScreen() {
         }
         Unit
     }
+    var test by remember { mutableStateOf("测试读取") }
+
+    val isInPreview = LocalInspectionMode.current
+    if (!isInPreview) {
+        LaunchedEffect(Unit) {
+            val config = GlobalConfig.read()
+            test = if (config.playerData?.lxnsPlayerDataMai == null) {
+                "测试读取完毕--信息为空"
+            } else {
+                "测试读取完毕--有信息"
+            }
+        }
+    }
+
     PullToRefreshBox(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
@@ -73,21 +90,23 @@ fun HomeScreen() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            HomeAccCard()
-            HomeAccCard()
+            HomeAccCard(gameName = "舞萌DX")
+            HomeAccCard(gameName = "中二节奏")
+            Text(text = test)
         }
     }
 }
 
 @Composable
 fun HomeAccCard(
-    gameName: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
-    playerId: String = stringResource(R.string.CardModuleMai_NotBindLxnsFc),
+    gameName: String = stringResource(R.string.CardModule_GetInfoFiled),
+    playerId: String = stringResource(R.string.CardModule_NotBindLxnsFc),
     playerIconRes: Int = R.drawable.card_ic_icon_dummy,
-    description: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
-    rating: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
-    playerNumId: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
-    lastSyncDate: String = stringResource(R.string.CardModuleMai_GetInfoFiled),
+    description: String = stringResource(R.string.CardModule_GetInfoFiled),
+    rating: String = stringResource(R.string.CardModule_GetInfoFiled),
+    playerNumId: String = stringResource(R.string.CardModule_GetInfoFiled),
+    lastSyncDate: String = stringResource(R.string.CardModule_GetInfoFiled),
+    isLockedCard: Boolean = true,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotateAngle by animateFloatAsState(
@@ -98,10 +117,17 @@ fun HomeAccCard(
         )
     )
 
+    LaunchedEffect(Unit) { }
+
     OutlinedCard(
         modifier = Modifier
             .padding(8.dp)
             .clip(CardDefaults.shape)
+            .clickable {
+                if (!isLockedCard) {
+                    expanded = !expanded
+                }
+            }
             .border(1.dp, MaterialTheme.colorScheme.outline, CardDefaults.shape),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -117,15 +143,21 @@ fun HomeAccCard(
                     Text(playerId, style = MaterialTheme.typography.titleSmall)
                 }
                 //卡片概览(游戏/登录状态)
-                IconButton(onClick = { expanded = !expanded }) {
+                if (isLockedCard) {
+                    Icon(
+                        painterResource(R.drawable.card_ic_locked),
+                        contentDescription = stringResource(R.string.desc_card_locked)
+                    )
+                    //锁定卡片
+                } else {
                     Icon(
                         painterResource(R.drawable.card_ic_arrow),
                         contentDescription = if (expanded) stringResource(R.string.desc_card_close)
                         else stringResource(R.string.desc_card_open),
                         modifier = Modifier.rotate(rotateAngle)
                     )
+                    //展开卡片箭头
                 }
-                //展开卡片箭头
             }
         }
         AnimatedVisibility(
@@ -144,7 +176,13 @@ fun HomeAccCard(
             )
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                HomeAccCardModuleMaiChu(playerIconRes,description,rating,playerNumId,lastSyncDate)
+                HomeAccCardModuleMaiChu(
+                    playerIconRes,
+                    description,
+                    rating,
+                    playerNumId,
+                    lastSyncDate
+                )
                 Spacer(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
             }
         }
@@ -174,7 +212,7 @@ fun HomeAccCardModuleMaiChu(
             {
                 Image(
                     painterResource(playerIconRes),
-                    contentDescription = stringResource(R.string.CardModuleMai_PlayerIconDesc),
+                    contentDescription = stringResource(R.string.CardModule_PlayerIconDesc),
                     modifier = Modifier
                         .size(96.dp)
                         .clip(RoundedCornerShape(12.dp))
@@ -191,11 +229,11 @@ fun HomeAccCardModuleMaiChu(
                 MarqueeText_FullWidth(description, 50)
                 MarqueeText_FullWidth(rating, 50)
                 MarqueeText_FullWidth(
-                    stringResource(R.string.CardModuleMai_FriendCode) + playerNumId,
+                    stringResource(R.string.CardModule_FriendCode) + playerNumId,
                     50
                 )
                 MarqueeText_FullWidth(
-                    stringResource(R.string.CardModuleMai_LastSyncTime) + lastSyncDate,
+                    stringResource(R.string.CardModule_LastSyncTime) + lastSyncDate,
                     50
                 )
             }
@@ -208,7 +246,7 @@ fun HomeAccCardModuleMaiChu(
 @Composable
 fun MarqueeText_FullWidth(
     text: String,
-    speed: Int
+    speed: Int,
 ) {
     Text(
         text,

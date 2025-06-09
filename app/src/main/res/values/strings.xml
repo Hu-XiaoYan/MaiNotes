@@ -7,12 +7,13 @@
 
     <string name="desc_card_open">展开卡片</string>
     <string name="desc_card_close">关闭卡片</string>
-    <string name="CardModuleMai_PlayerIconDesc">玩家头像</string>
-    <string name="CardModuleMai_Rating">DX Rating:</string>
-    <string name="CardModuleMai_FriendCode">好友码:</string>
-    <string name="CardModuleMai_LastSyncTime">上次同步:</string>
-    <string name="CardModuleMai_GetInfoFiled">获取失败!</string>
-    <string name="CardModuleMai_NotBindLxnsFc">暂未绑定</string>
+    <string name="desc_card_locked">卡片已锁定</string>
+    <string name="CardModule_PlayerIconDesc">玩家头像</string>
+    <string name="CardModule_Rating">Rating:</string>
+    <string name="CardModule_FriendCode">好友码:</string>
+    <string name="CardModule_LastSyncTime">上次同步:</string>
+    <string name="CardModule_GetInfoFiled">获取失败!</string>
+    <string name="CardModule_NotBindLxnsFc">暂未绑定</string>
 
     <string name="InputLxnsPersonalToken">落雪查分器个人Token</string>
 
