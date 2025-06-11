@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.xiaoyan.mainotes.R
-import com.xiaoyan.mainotes.viewmodel.GlobalConfig
+import com.xiaoyan.mainotes.core.GlobalConfig
 import com.xiaoyan.mainotes.viewmodel.SettingsViewModel
 
 @Composable
@@ -46,7 +46,7 @@ fun SettingsScreen() {
     if (!isInPreview) {
         LaunchedEffect(Unit) {
             val config = GlobalConfig.read()
-            lxnsPersonalToken = config.lxnsPersonalToken
+            lxnsPersonalToken = config.lxnsPersonalToken.toString()
         }
     }
     //Page启动前动作
@@ -103,7 +103,7 @@ fun SettingsScreen() {
 
                         else -> {
                             Text(
-                                text = "${stringResource(R.string.UnknownError)}:${errorMessage}",
+                                text = "${stringResource(R.string.Error)}:${errorMessage}",
                                 color = MaterialTheme.colorScheme.error
                             )
                         }

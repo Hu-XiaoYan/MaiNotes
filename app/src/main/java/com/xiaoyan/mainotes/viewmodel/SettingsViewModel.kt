@@ -5,39 +5,61 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xiaoyan.mainotes.model.LxnsPlayerDataMai
+import com.xiaoyan.mainotes.core.GlobalConfig
+import com.xiaoyan.mainotes.network.fetchLxnsPersonalChuniData
 import com.xiaoyan.mainotes.network.fetchLxnsPersonalMaiData
 import kotlinx.coroutines.launch
 
-class SettingsViewModel: ViewModel() {
-    private var playerData by mutableStateOf<LxnsPlayerDataMai?>(null)
+class SettingsViewModel : ViewModel() {
+    private var maiStatus by mutableStateOf(false)
+    private var chuStatus by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
 
-    fun fetchLxnsPlayerData(lxnsPersonalToken: String) {
-        if (lxnsPersonalToken.isBlank()) {
-            errorMessage = "TokenEmpty"
-            return
-        }
-        //Token为空拒绝抓取
+    fun fetchLxnsPlayerData(lxnsToken: String) {
+        val config = GlobalConfig.getUserConfig().copy()
+        //获取配置的拷贝, 防止外部修改
         viewModelScope.launch {
+            if (lxnsToken.isBlank()) {
+                errorMessage = "TokenEmpty"
+            }
             try {
-                val result = fetchLxnsPersonalMaiData(lxnsPersonalToken)
-                if (result.success && result.data != null){
-                    playerData = result.data
-                    errorMessage = null
-                    //抓取成功
-                    val config = GlobalConfig.getUserConfig().copy()
-                    config.lxnsPersonalToken = lxnsPersonalToken
-                    GlobalConfig.save(config)
-                } else {
-                    playerData = null
-                    errorMessage = result.message
-                    //抓取失败
+                val maiResult = fetchLxnsPersonalMaiData(lxnsToken)
+                if (maiResult.success && maiResult.data != null) {
+                    maiStatus = true
                 }
-            } catch (e: Exception){
-                playerData = null
+                val chuResult = fetchLxnsPersonalChuniData(lxnsToken)
+                if (chuResult.success && chuResult.data != null) {
+                    chuStatus = true
+                }
+                //抓取数据
+                when {
+                    maiStatus && chuStatus -> {
+                        config.lxnsPersonalToken = lxnsToken
+                        config.lxnsPlayerDataMai = maiResult.data
+                        config.lxnsPlayerDataChuni = chuResult.data
+                        GlobalConfig.save(config)
+                        errorMessage = null
+                    }
+
+                    maiStatus && !chuStatus -> {
+                        config.lxnsPersonalToken = lxnsToken
+                        config.lxnsPlayerDataMai = maiResult.data
+                        GlobalConfig.save(config)
+                        errorMessage = null
+                    }
+
+                    !maiStatus && chuStatus -> {
+                        config.lxnsPersonalToken = lxnsToken
+                        config.lxnsPlayerDataChuni = chuResult.data
+                        GlobalConfig.save(config)
+                        errorMessage = null
+                    }
+
+                    else -> errorMessage = "fetchError"
+                }
+
+            } catch (e: Exception) {
                 errorMessage = e.localizedMessage
-                //网络错误等
             }
         }
     }

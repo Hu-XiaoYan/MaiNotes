@@ -15,6 +15,9 @@ val client = HttpClient(CIO) {
     install(ContentNegotiation) {
         json(Json {
             ignoreUnknownKeys = true
+            encodeDefaults = true
+            explicitNulls = false
+            isLenient = true
         })
     }
 }
@@ -27,7 +30,7 @@ suspend fun fetchLxnsPersonalMaiData(lxnsPersonalToken: String): LxnsPersonalApi
     return resp
 }
 
-suspend fun fetchLxnsPersonalDChuniData(lxnsPersonalToken: String): LxnsPersonalApiRespChuni {
+suspend fun fetchLxnsPersonalChuniData(lxnsPersonalToken: String): LxnsPersonalApiRespChuni {
     val resp: LxnsPersonalApiRespChuni =
         client.get("https://maimai.lxns.net/api/v0/user/chunithm/player") {
             header("X-User-Token", lxnsPersonalToken)

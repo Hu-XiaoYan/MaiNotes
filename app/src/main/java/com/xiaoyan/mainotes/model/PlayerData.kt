@@ -14,7 +14,7 @@ data class LxnsPersonalApiRespChuni(
 @Serializable
 data class LxnsPlayerDataChuni(
     val name: String,
-    val level: String,
+    val level: Short,
     val rating: Float,
     @SerialName("rating_possession")
     val ratingPossession: String,
@@ -32,11 +32,11 @@ data class LxnsPlayerDataChuni(
     @SerialName("total_play_count")
     val totalPlayCount: Int,
     val trophy: TrophyChuni,
-    val character: Character?,
+    val character: Character? = null,
     @SerialName("name_plate")
-    val namePlate: NamePlateChuni?,
+    val namePlate: NamePlateChuni? = null,
     @SerialName("map_icon")
-    val mapIcon: MapIcon?,
+    val mapIcon: MapIcon? = null,
     @SerialName("upload_time")
     val uploadTime: String
 )
@@ -51,32 +51,32 @@ data class ClassEmblem(
 data class TrophyChuni(
     val id: Int,
     val name: String,
-    val color: String?,
-    val level: Int?
+    val color: String? = null,
+    val level: Int? = null
 )
 
 @Serializable
 data class NamePlateChuni(
     val id: Int,
     val name: String,
-    val color: String?,
-    val level: Int?
+    val color: String? = null,
+    val level: Int? = null
 )
 
 @Serializable
 data class MapIcon(
     val id: Int,
     val name: String,
-    val color: String?,
-    val level: Int?
+    val color: String? = null,
+    val level: Int? = null
 )
 
 @Serializable
 data class Character(
     val id: Int,
     val name: String,
-    val color: String?,
-    val level: Int?
+    val color: String? = null,
+    val level: Int? = null
 )
 
 @Serializable
@@ -99,10 +99,10 @@ data class LxnsPlayerDataMai(
     @SerialName("class_rank")
     val classRank: Short,
     val star: Short,
-    val icon: PlayerIcon?,
+    val icon: PlayerIcon? = null,
     @SerialName("name_plate")
-    val namePlate: NamePlate?,
-    val frame: Frame?,
+    val namePlate: NamePlate? = null,
+    val frame: Frame? = null,
     @SerialName("upload_time")
     val uploadTime: String
 )
@@ -111,26 +111,26 @@ data class LxnsPlayerDataMai(
 data class TrophyMai(
     val id: Int,
     val name: String,
-    val color: String?
+    val color: String? = null
 )
 
 @Serializable
 data class PlayerIcon(
     val id: Int,
     val name: String,
-    val genre: String?
+    val genre: String? = null
 )
 
 @Serializable
 data class NamePlate(
     val id: Int,
     val name: String,
-    val genre: String?
+    val genre: String? = null
 )
 
 @Serializable
 data class Frame(
     val id: Int,
     val name: String,
-    val genre: String?
+    val genre: String? = null
 )

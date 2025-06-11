@@ -1,7 +1,7 @@
 package com.xiaoyan.mainotes
 
 import android.app.Application
-import com.xiaoyan.mainotes.viewmodel.GlobalConfig
+import com.xiaoyan.mainotes.core.GlobalConfig
 
 
 class MaiNotes: Application(){

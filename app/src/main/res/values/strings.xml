@@ -1,10 +1,19 @@
 <resources>
     <string name="app_name">MaiNotes</string>
+    <string name="Error">发生错误</string>
+    <string name="UnknownError">发生未知错误</string>
+
+    <string name="nav_title">MaiNotes Preview Ver-0.1.7</string>
     <string name="nav_btn_home">主页</string>
     <string name="nav_btn_story">故事</string>
     <string name="nav_btn_settings">设置</string>
     <string name="nav_btn_about">关于MaiNotes</string>
+    <string name="desc_nav_open">打开导航栏</string>
+    <string name="desc_nav_close">关闭导航栏</string>
 
+    <string name="maidx_official">舞萌DX</string>
+    <string name="chunithm_official">中二节奏</string>
+    <string name="unknown_game">未知游戏</string>
     <string name="desc_card_open">展开卡片</string>
     <string name="desc_card_close">关闭卡片</string>
     <string name="desc_card_locked">卡片已锁定</string>
@@ -14,10 +23,10 @@
     <string name="CardModule_LastSyncTime">上次同步:</string>
     <string name="CardModule_GetInfoFiled">获取失败!</string>
     <string name="CardModule_NotBindLxnsFc">暂未绑定</string>
+    <string name="CardModule_NoData">暂无数据</string>
+    <string name="CardModule_Loading">加载中</string>
 
     <string name="InputLxnsPersonalToken">落雪查分器个人Token</string>
-
-    <string name="UnknownError">发生未知错误</string>
     <string name="TokenEmpty">Token不能为空</string>
     <string name="TokenError">Token有误</string>
 </resources>
