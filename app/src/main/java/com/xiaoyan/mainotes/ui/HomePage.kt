@@ -53,9 +53,7 @@ fun HomeScreen() {
         isRefreshing = isRefreshing, onRefresh = onRefresh, modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
         ) {
             HomeAccountCardMaiChu(gameName = "舞萌DX")
             HomeAccountCardMaiChu(gameName = "中二节奏")
@@ -76,15 +74,13 @@ fun HomeAccountCardMaiChu(
     var expanded by remember { mutableStateOf(false) }
     val isLockedCard by remember { mutableStateOf(false) }
     val viewModel: HomeViewModel = viewModel()
+    val playerName = viewModel.getPlayerID(gameName)
+    val userInfo = viewModel.getPlayerData(gameName)
 
     OutlinedCard(modifier = Modifier
         .padding(horizontal = 16.dp, vertical = 8.dp)
         .clip(CardDefaults.shape)
-        .clickable {
-            if (!isLockedCard) {
-                expanded = !expanded
-            }
-        }
+        .clickable { if (!isLockedCard) { expanded = !expanded } }
         .border(1.dp, MaterialTheme.colorScheme.outline, CardDefaults.shape),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -94,7 +90,7 @@ fun HomeAccountCardMaiChu(
                 //自适应玩家信息
             ) {
                 Column { Text(gameName, style = MaterialTheme.typography.titleLarge)
-                    Text("TestID", style = MaterialTheme.typography.titleSmall)
+                    Text(playerName, style = MaterialTheme.typography.titleSmall)
                 }
                 //卡片概览(游戏/登录状态)
                 viewModel.HomeCardStatus(isLockedCard, expanded)
@@ -122,12 +118,14 @@ fun HomeAccountCardMaiChu(
                         modifier = Modifier.padding(bottom = 3.dp, start = 16.dp, end = 16.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        viewModel.HomeAccCardMarqueeText(trophy)
-                        viewModel.HomeAccCardMarqueeText(rating)
+                        viewModel.HomeAccCardMarqueeText(userInfo.trophy ?: trophy)
+                        viewModel.HomeAccCardMarqueeText("Rating:${userInfo.rating ?: rating}")
                         viewModel.HomeAccCardMarqueeText(
-                            stringResource(R.string.CardModule_FriendCode) + friendCode)
+                            (stringResource(R.string.CardModule_FriendCode) +
+                                    (userInfo.friendCode ?: friendCode)))
                         viewModel.HomeAccCardMarqueeText(
-                            stringResource(R.string.CardModule_LastSyncTime) + lastSyncDate)
+                            stringResource(R.string.CardModule_LastSyncTime) +
+                                    (userInfo.lastSyncTime ?: lastSyncDate))
                     }
                 }
             }

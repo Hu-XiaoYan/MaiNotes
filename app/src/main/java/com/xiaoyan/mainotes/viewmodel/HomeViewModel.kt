@@ -3,8 +3,6 @@ package com.xiaoyan.mainotes.viewmodel
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,31 +25,51 @@ import com.xiaoyan.mainotes.core.GlobalConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+data class UserInfo(
+    val trophy: String? = null,
+    val rating: String? = null,
+    val friendCode: String? = null,
+    val lastSyncTime: String? = null
+)
+
 class HomeViewModel : ViewModel() {
-    fun getCardSubTitle(
-        currentGameName: String,
-        gameNameStringMai: String,
-        gameNameStringChuni: String,
-    ): String {
-        val config = GlobalConfig.getUserConfig().copy()
+    @Composable
+    fun getPlayerID(currentGameName: String): String {
+        val config = GlobalConfig.read()
         //玩家数据和Token不可空, 由于玩家数据为空时落雪不返回数据, 因此Token和玩家数据都不会被保存
         return when {
-            config.lxnsPersonalToken == null -> "NotBind"
-            currentGameName == gameNameStringMai -> {
+            config.lxnsPersonalToken == null -> stringResource(R.string.CardModule_NotBindLxnsFc)
+            currentGameName == stringResource(R.string.maidx_official) -> {
                 val data = config.lxnsPlayerDataMai
-                data?.name ?: "NoData"
+                data?.name?: stringResource(R.string.CardModule_NoData)
             }
-
-            currentGameName == gameNameStringChuni -> {
+            currentGameName == stringResource(R.string.chunithm_official) -> {
                 val data = config.lxnsPlayerDataChuni
-                data?.name ?: "NoData"
+                data?.name?: stringResource(R.string.CardModule_NoData)
             }
-
-            else -> "UnknownError"
+            else -> stringResource(R.string.UnknownError)
         }
     }
 
-    //^^^上方代码可能需要重构
+    @Composable
+    fun getPlayerData(currentGameName: String): UserInfo {
+        val config = GlobalConfig.read()
+        return when (currentGameName) {
+            stringResource(R.string.maidx_official) -> {
+                UserInfo(config.lxnsPlayerDataMai?.trophy?.name,
+                    config.lxnsPlayerDataMai?.rating.toString(),
+                    config.lxnsPlayerDataMai?.friendCode.toString(),
+                    config.lxnsPlayerDataMai?.uploadTime)
+            }
+            stringResource(R.string.chunithm_official) -> {
+                UserInfo(config.lxnsPlayerDataChuni?.trophy?.name,
+                    config.lxnsPlayerDataChuni?.rating.toString(),
+                    config.lxnsPlayerDataChuni?.friendCode.toString(),
+                    config.lxnsPlayerDataChuni?.uploadTime)
+            }
+            else -> UserInfo()
+        }
+    }
 
     @Composable
     fun onHomeRefreshing(): Pair<Boolean, () -> Unit> {
