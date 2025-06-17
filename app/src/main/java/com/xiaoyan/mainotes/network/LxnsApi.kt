@@ -10,6 +10,9 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 val client = HttpClient(CIO) {
     install(ContentNegotiation) {
@@ -27,13 +30,22 @@ suspend fun fetchLxnsPersonalMaiData(lxnsPersonalToken: String): LxnsPersonalApi
         client.get("https://maimai.lxns.net/api/v0/user/maimai/player") {
             header("X-User-Token", lxnsPersonalToken)
         }.body()
-    return resp
+    val parsedTime = Instant.parse(resp.data?.uploadTime)
+        .atZone(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    val newData = resp.data?.copy(uploadTime = parsedTime)
+    return resp.copy(data = newData)
 }
+
 
 suspend fun fetchLxnsPersonalChuniData(lxnsPersonalToken: String): LxnsPersonalApiRespChuni {
     val resp: LxnsPersonalApiRespChuni =
         client.get("https://maimai.lxns.net/api/v0/user/chunithm/player") {
             header("X-User-Token", lxnsPersonalToken)
         }.body()
-    return resp
+    val parsedTime = Instant.parse(resp.data?.uploadTime)
+        .atZone(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    val newData = resp.data?.copy(uploadTime = parsedTime)
+    return resp.copy(data = newData)
 }

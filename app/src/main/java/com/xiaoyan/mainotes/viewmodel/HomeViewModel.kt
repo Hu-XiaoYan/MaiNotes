@@ -52,6 +52,24 @@ class HomeViewModel : ViewModel() {
     }
 
     @Composable
+    fun checkConfig(currentGameName: String): Boolean {
+        val config = GlobalConfig.read()
+        when (currentGameName) {
+            stringResource(R.string.maidx_official) -> {
+                if (config.lxnsPlayerDataMai != null){
+                    return false
+                }
+            }
+            stringResource(R.string.chunithm_official) -> {
+                if (config.lxnsPlayerDataChuni != null){
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    @Composable
     fun getPlayerData(currentGameName: String): UserInfo {
         val config = GlobalConfig.read()
         return when (currentGameName) {

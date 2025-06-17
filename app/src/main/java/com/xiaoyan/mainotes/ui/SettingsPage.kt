@@ -41,12 +41,17 @@ fun SettingsScreen() {
     var lxnsPersonalToken by remember { mutableStateOf("") }
     val viewModel: SettingsViewModel = viewModel()
     val errorMessage = viewModel.errorMessage
+    val notBind = stringResource(R.string.CardModule_NotBindLxnsFc)
 
     val isInPreview = LocalInspectionMode.current
     if (!isInPreview) {
         LaunchedEffect(Unit) {
             val config = GlobalConfig.read()
-            lxnsPersonalToken = config.lxnsPersonalToken.toString()
+            lxnsPersonalToken = if (config.lxnsPersonalToken == null) {
+                notBind
+            } else {
+                config.lxnsPersonalToken.toString()
+            }
         }
     }
     //Page启动前动作

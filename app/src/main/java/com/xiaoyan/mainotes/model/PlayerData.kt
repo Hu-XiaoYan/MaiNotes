@@ -104,7 +104,7 @@ data class LxnsPlayerDataMai(
     val namePlate: NamePlate? = null,
     val frame: Frame? = null,
     @SerialName("upload_time")
-    val uploadTime: String
+    var uploadTime: String
 )
 
 @Serializable

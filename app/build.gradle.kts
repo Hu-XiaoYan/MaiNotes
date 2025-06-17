@@ -11,10 +11,10 @@ android {
 
     defaultConfig {
         applicationId = "com.xiaoyan.mainotes"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "Preview Ver-0.1.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

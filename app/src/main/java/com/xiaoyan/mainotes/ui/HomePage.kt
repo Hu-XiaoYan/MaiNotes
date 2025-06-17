@@ -17,9 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -52,11 +51,11 @@ fun HomeScreen() {
     PullToRefreshBox(
         isRefreshing = isRefreshing, onRefresh = onRefresh, modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-        ) {
-            HomeAccountCardMaiChu(gameName = "舞萌DX")
-            HomeAccountCardMaiChu(gameName = "中二节奏")
+        LazyColumn {
+            item {
+                HomeAccountCardMaiChu(gameName = "舞萌DX")
+                HomeAccountCardMaiChu(gameName = "中二节奏")
+            }
         }
     }
 }
@@ -72,8 +71,8 @@ fun HomeAccountCardMaiChu(
     lastSyncDate: String = stringResource(R.string.CardModule_GetInfoFiled)
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val isLockedCard by remember { mutableStateOf(false) }
     val viewModel: HomeViewModel = viewModel()
+    val isLockedCard = viewModel.checkConfig(gameName)
     val playerName = viewModel.getPlayerID(gameName)
     val userInfo = viewModel.getPlayerData(gameName)
 
@@ -81,15 +80,14 @@ fun HomeAccountCardMaiChu(
         .padding(horizontal = 16.dp, vertical = 8.dp)
         .clip(CardDefaults.shape)
         .clickable { if (!isLockedCard) { expanded = !expanded } }
-        .border(1.dp, MaterialTheme.colorScheme.outline, CardDefaults.shape),
+        .border(1.dp, MaterialTheme.colorScheme.outline, CardDefaults.shape)
+        .fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
-                //自适应玩家信息
-            ) {
-                Column { Text(gameName, style = MaterialTheme.typography.titleLarge)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(gameName, style = MaterialTheme.typography.titleLarge)
                     Text(playerName, style = MaterialTheme.typography.titleSmall)
                 }
                 //卡片概览(游戏/登录状态)
@@ -109,23 +107,20 @@ fun HomeAccountCardMaiChu(
                     )
                 )
             ) {
-                Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-                    Column {
-                        Image(playerIcon,
-                            contentDescription = stringResource(R.string.CardModule_PlayerIconDesc),
-                            modifier = Modifier.size(96.dp).clip(RoundedCornerShape(12.dp)))}
+                Column {
+                    Image(playerIcon,
+                        contentDescription = stringResource(R.string.CardModule_PlayerIconDesc),
+                        modifier = Modifier.size(96.dp).clip(RoundedCornerShape(12.dp)))
                     Column(
                         modifier = Modifier.padding(bottom = 3.dp, start = 16.dp, end = 16.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
                         viewModel.HomeAccCardMarqueeText(userInfo.trophy ?: trophy)
-                        viewModel.HomeAccCardMarqueeText("Rating:${userInfo.rating ?: rating}")
-                        viewModel.HomeAccCardMarqueeText(
-                            (stringResource(R.string.CardModule_FriendCode) +
-                                    (userInfo.friendCode ?: friendCode)))
-                        viewModel.HomeAccCardMarqueeText(
-                            stringResource(R.string.CardModule_LastSyncTime) +
-                                    (userInfo.lastSyncTime ?: lastSyncDate))
+                        viewModel.HomeAccCardMarqueeText("Rating: ${userInfo.rating ?: rating}")
+                        viewModel.HomeAccCardMarqueeText("${stringResource(
+                            R.string.CardModule_FriendCode)} ${userInfo.friendCode ?: friendCode}")
+                        viewModel.HomeAccCardMarqueeText("${stringResource(
+                            R.string.CardModule_LastSyncTime)} ${userInfo.lastSyncTime ?: lastSyncDate}")
                     }
                 }
             }
